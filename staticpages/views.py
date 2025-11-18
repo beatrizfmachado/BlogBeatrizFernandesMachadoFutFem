@@ -4,4 +4,10 @@ from django.http import HttpResponse
 
 
 def index(request):
-    return HttpResponse("<h1>Site Base</h1>")
+    context = {}
+    return render(request, 'staticpages/index.html', context)
+
+
+def about(request):
+    context = {}
+    return render(request, 'staticpages/about.html', context)
