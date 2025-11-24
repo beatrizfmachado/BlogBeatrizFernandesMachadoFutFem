@@ -1,5 +1,14 @@
 {% extends 'base.html' %} {% block content %}
 <h2>Todos os Posts</h2>
+<section>
+  <p>
+    Muitos resultados? <a href="{% url 'posts:search' %}">Buscar Posts</a>
+  </p>
+  <p>
+    Deseja fazer um post?
+    <a href="{% url 'posts:create' %}">Adicionar novo post</a>
+  </p>
+</section>
 {% if post_list %}
 <section class="lista-de-cards">
   {% for post in post_list %}

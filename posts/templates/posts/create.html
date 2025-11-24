@@ -1,0 +1,20 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Inserir Novo Post</h2>
+<form method="POST" action="{% url 'posts:create' %}">
+  {% csrf_token %}
+  <p>
+    <label for="id_titulo">Título:</label>
+    <input type="text" name="titulo" id="id_titulo" />
+  </p>
+  <p>
+    <label for="id_data_postagem">Data de postagem:</label>
+    <input type="number" name="data_postagem" id="id_data_postagem" />
+  </p>
+  <p>
+    <label for="id_imagem_url">URL da imagem do post:</label>
+    <input type="url" name="imagem_url" id="id_imagem_url" />
+  </p>
+  <button type="submit">Criar</button>
+</form>
+
+{% endblock content %}
