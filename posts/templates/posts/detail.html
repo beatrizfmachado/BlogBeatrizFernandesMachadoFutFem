@@ -1,0 +1,17 @@
+{% extends 'base.html' %} 
+
+{% block title %} 
+{{ post.titulo }} ({{post.data_postagem }}) 
+{% endblock title %}
+
+{% block content %}
+<h2>Detalhes do Post {{ post.titulo }} ({{ post.data_postagem }})</h2>
+
+<section class="dados-de-post">
+  <img src="{{ post.imagem_url }}" alt="Imagem do post {{ post.titulo}}" />
+  <ul>
+    <li>Título: {{ post.titulo }}</li>
+    <li>Data da publicação: {{ post.data_postagem }}</li>
+  </ul>
+</section>
+{% endblock content %}

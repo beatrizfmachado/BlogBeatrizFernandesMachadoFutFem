@@ -1,0 +1,16 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Todos os Posts</h2>
+{% if post_list %}
+<section class="lista-de-cards">
+  {% for post in post_list %}
+  <article class="card">
+    <a href="{% url 'posts:detail' forloop.counter %}"
+      ><img src="{{ post.imagem_url }}" alt="Imagem do post {{ post.titulo}}"
+    /></a>
+    <p>{{ post.titulo }} ({{ post.data_postagem }})</p>
+  </article>
+  {% endfor %}
+</section>
+{% else %}
+<p>Não foi encontrado nenhum post.</p>
+{% endif %} {% endblock content %}

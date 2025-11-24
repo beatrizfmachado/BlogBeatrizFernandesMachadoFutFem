@@ -69,6 +69,37 @@ footer#rodape-principal {
   padding: 1rem 1rem;
 }
 
+.lista-de-cards {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card {
+  border: 1px solid var(--secondary-bg-color);
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px var(--color-shadow);
+  margin: 1rem;
+  padding: 1.25rem;
+  width: 285px;
+}
+
+.small-card {
+  border: 1px solid var(--secondary-bg-color);
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px var(--color-shadow);
+  margin: 1rem;
+  padding: 1.25rem;
+  width: 160px;
+}
+
+.card img {
+  width: 100%;
+}
+
+.small-card img {
+  width: 100%;
+}
+
 a {
   color: var(--secondary-color);
   text-decoration: none;
@@ -77,6 +108,23 @@ a {
 a:hover {
   color: var(--secondary-color-light);
   text-decoration: underline;
+}
+
+.dados-de-post {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  padding: 1rem 0;
+}
+
+.dados-de-post img {
+  width: 285px;
+  box-shadow: 2px 2px 10px var(--color-shadow);
+}
+
+.dados-de-post ul {
+  list-style-type: none;
 }
 
 input {
