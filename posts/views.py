@@ -1,42 +1,69 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .temp_data import post_data
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from .models import Post
 
-
-def detail_post(request, post_id):
-    post = post_data[post_id - 1]
-    return HttpResponse(
-        f'Detalhes do post {post["titulo"]} ({post["data_postagem"]})')
-
+#View READ para consulta de post
 def list_posts(request):
-    context = {"post_list": post_data}
+    post_list = Post.objects.all()
+    context = {'post_list': post_list}
     return render(request, 'posts/index.html', context)
 
+#View para detalhamento de post
 def detail_post(request, post_id):
-    context = {'post': post_data[post_id - 1]}
+    post = get_object_or_404(Post, pk=post_id)
+    context = {'post': post}
     return render(request, 'posts/detail.html', context)
 
+#View para busca de post
 def search_posts(request):
     context = {}
     if request.GET.get('query', False):
-        context = {
-            "post_list": [
-                m for m in post_data
-                if request.GET['query'].lower() in m['titulo'].lower()
-            ]
-        }
+        search_term = request.GET['query'].lower()
+        post_list = Post.objects.filter(titulo__icontains=search_term)
+        context = {"post_list": post_list}
     return render(request, 'posts/search.html', context)
 
+#View para criar post
 def create_post(request):
     if request.method == 'POST':
-        post_data.append({
-            'titulo': request.POST['titulo'],
-            'data_postagem': request.POST['data_postagem'],
-            'imagem_url': request.POST['imagem_url']
-        })
+        post_titulo = request.POST['titulo']
+        post_data_postagem = request.POST['data_postagem']
+        post_imagem_url = request.POST['imagem_url']
+        post = Post(titulo=post_titulo,
+                      data_postagem=post_data_postagem,
+                      imagem_url=post_imagem_url)
+        post.save()
         return HttpResponseRedirect(
-            reverse('posts:detail', args=(len(post_data), )))
+            reverse('posts:detail', args=(post.id, )))
     else:
         return render(request, 'posts/create.html', {})
+    
+
+#View para atualizar post
+def update_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+
+    if request.method == "POST":
+        post.titulo = request.POST['titulo']
+        post.data_postagem = request.POST['data_postagem']
+        post.imagem_url = request.POST['imagem_url']
+        post.save()
+        return HttpResponseRedirect(
+            reverse('posts:detail', args=(post.id, )))
+
+    context = {'post': post}
+    return render(request, 'posts/update.html', context)
+
+#View para remover post
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+
+    if request.method == "POST":
+        post.delete()
+        return HttpResponseRedirect(reverse('posts:index'))
+
+    context = {'post': post}
+    return render(request, 'posts/delete.html', context)

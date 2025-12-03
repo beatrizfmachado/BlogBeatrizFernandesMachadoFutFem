@@ -1,7 +1,7 @@
 {% extends 'base.html' %} 
 
 {% block title %} 
-{{ post.titulo }} ({{post.data_postagem }}) 
+  {{ post.titulo }} ({{post.data_postagem }}) 
 {% endblock title %}
 
 {% block content %}
@@ -12,6 +12,8 @@
   <ul>
     <li>Título: {{ post.titulo }}</li>
     <li>Data da publicação: {{ post.data_postagem }}</li>
+    <li><a href="{% url 'posts:update' post.id %}">Editar o post</a></li>
+    <li><a href="{% url 'posts:delete' post.id %}">Apagar</a></li>
   </ul>
 </section>
 {% endblock content %}
