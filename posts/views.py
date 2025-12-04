@@ -2,23 +2,23 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .temp_data import post_data
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from .models import Post
 from .forms import PostForm
+from django.views import generic
 
 
-#View READ para consulta de post
-def list_posts(request):
-    post_list = Post.objects.all()
-    context = {'post_list': post_list}
-    return render(request, 'posts/index.html', context)
+#Classe genérica com a view LIST para consulta de posts
+class PostListView(generic.ListView):
+    model = Post
+    template_name = 'posts/index.html'
 
 
-#View para detalhamento de post
-def detail_post(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
-    context = {'post': post}
-    return render(request, 'posts/detail.html', context)
+#Classe genérica com a view DETAIL para detalhamento de post
+class PostDetailView(generic.DetailView):
+    model = Post
+    template_name = 'posts/detail.html'
+    context_object_name = 'post'
 
 
 #View para busca de post
@@ -31,56 +31,26 @@ def search_posts(request):
     return render(request, 'posts/search.html', context)
 
 
-#View para criar post
-def create_post(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post_titulo = form.cleaned_data['titulo']
-            post_data_postagem = form.cleaned_data['data_postagem']
-            post_imagem_url = form.cleaned_data['imagem_url']
-            post = Post(titulo=post_titulo,
-                          data_postagem=post_data_postagem,
-                          imagem_url=post_imagem_url)
-            post.save()
-            return HttpResponseRedirect(
-                reverse('posts:detail', args=(post.id, )))
-    else:
-        form = PostForm()
-        context = {'form': form}
-        return render(request, 'posts/create.html', context)
+#Classe genérica com a view CREATE para criar post
+class PostCreateView(generic.CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'posts/create.html'
+    def get_success_url(self):
+        return reverse_lazy('posts:detail', args=[self.object.id])
     
 
-#View para atualizar post
-def update_post(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
-    if request.method == "POST":
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post.titulo = form.cleaned_data['titulo']
-            post.data_postagem = form.cleaned_data['data_postagem']
-            post.imagem_url = form.cleaned_data['imagem_url']
-            post.save()
-            return HttpResponseRedirect(
-                reverse('posts:detail', args=(post.id, )))
-    else:
-        form = PostForm(
-            initial={
-                'titulo': post.titulo,
-                'data_postagem': post.data_postagem,
-                'imagem_url': post.imagem_url
-            })
-    context = {'post': post, 'form': form}
-    return render(request, 'posts/update.html', context)
+#Classe genérica com a view UPDATE para atualizar post
+class PostUpdateView(generic.UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'posts/update.html'
+    def get_success_url(self):
+        return reverse_lazy('posts:detail', args=[self.object.id])
 
 
-#View para remover post
-def delete_post(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
-
-    if request.method == "POST":
-        post.delete()
-        return HttpResponseRedirect(reverse('posts:index'))
-
-    context = {'post': post}
-    return render(request, 'posts/delete.html', context)
+#Classe genérica com a view DELETE para remover post
+class PostDeleteView(generic.DeleteView):
+    model = Post
+    template_name = 'posts/delete.html'
+    success_url = reverse_lazy('posts:index')
