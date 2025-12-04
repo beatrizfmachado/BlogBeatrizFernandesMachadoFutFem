@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from .temp_data import post_data
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from .models import Post
-from .forms import PostForm
+from .models import Post, Comment
+from .forms import PostForm, CommentForm
 from django.views import generic
 
 
@@ -54,3 +54,24 @@ class PostDeleteView(generic.DeleteView):
     model = Post
     template_name = 'posts/delete.html'
     success_url = reverse_lazy('posts:index')
+
+#View para criação de comentário
+def create_comment(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment_autor = form.cleaned_data['autor']
+            comment_text = form.cleaned_data['text']
+            comment_data_comentario = form.cleaned_data['data_comentario']
+            comment = Comment(autor=comment_autor,
+                            text=comment_text,
+                            data_comentario = comment_data_comentario,
+                            post=post)
+            comment.save()
+            return HttpResponseRedirect(
+                reverse('posts:detail', args=(post_id, )))
+    else:
+        form = CommentForm()
+    context = {'form': form, 'post': post}
+    return render(request, 'posts/comment.html', context)

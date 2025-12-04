@@ -5,7 +5,7 @@
 {% endblock title %}
 
 {% block content %}
-<h2>Detalhes do Post {{ post.titulo }} ({{ post.data_postagem }})</h2>
+<h2>Detalhes do Post {{ post.titulo }} ({{ post.data_postagem|date}})</h2>
 <div>
     {{ post.conteudo|safe }}
 </div>
@@ -14,9 +14,34 @@
   <img src="{{ post.imagem_url }}" alt="Imagem do post {{ post.titulo}}" />
   <ul>
     <li>Título: {{ post.titulo }}</li>
-    <li>Data da publicação: {{ post.data_postagem }}</li>
+    <li>Data da publicação: {{ post.data_postagem|date}}</li>
     <li><a href="{% url 'posts:update' post.id %}">Editar o post</a></li>
     <li><a href="{% url 'posts:delete' post.id %}">Apagar</a></li>
   </ul>
 </section>
+
+<hr>
+
+<section>
+    <header>
+        <h3>Comentários</h3>
+    </header>
+    <ul>
+        {% if post.comment_set.all %}
+            {% for comment in post.comment_set.all|dictsortreversed:"data_comentario" %}
+                <figure>
+                    <blockquote>
+                        "{{ comment.text }}"
+                    </blockquote>
+                    <figcaption>—{{ comment.autor }}, {{ comment.data_comentario|date}}</figcaption>
+                </figure>
+            {% endfor %}
+        {% else %}
+            <p>Ainda não existe nenhum comentário nesse post.</p>
+        {% endif %}
+    </ul>
+    <hr>
+    <a href="{% url 'posts:comment' post.pk %}"><button>Fazer um comentário</button></a>
+</section>
+
 {% endblock content %}
