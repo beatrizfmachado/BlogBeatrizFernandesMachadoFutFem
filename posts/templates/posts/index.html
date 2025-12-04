@@ -1,6 +1,20 @@
-{% extends 'base.html' %} {% block content %}
-<h2>Todos os Posts</h2>
+{% extends 'base.html' %}
+
+{% block title %}
+
+{% if category %}
+Posts da categoria: {{ category.name }}
+
+{% else %}
+Todos os Posts
+{% endif %}
+
+{% endblock title %}
+
+{% block content %}
+
 <section>
+  {% if not category %}
   <p>
     Muitos resultados? <a href="{% url 'posts:search' %}">Buscar Posts</a>
   </p>
@@ -8,18 +22,31 @@
     Deseja fazer um post?
     <a href="{% url 'posts:create' %}">Adicionar novo post</a>
   </p>
+  {% endif %}
 </section>
-{% if post_list %}
+
+{% if posts %}
 <section class="lista-de-cards">
-  {% for post in post_list %}
+  {% for post in posts %}
   <article class="card">
-    <a href="{% url 'posts:detail' post.id %}"> 
+    <a href="{% url 'posts:detail' post.id %}">
       <img src="{{ post.imagem_url }}" alt="Imagem do post {{ post.titulo }}" />
     </a>
-    <p>{{ post.titulo }} ({{ post.data_postagem }})</p>
+    <h3>{{ post.titulo }}</h3>
+    <p>{{ post.data_postagem|date:"d/m/Y H:i" }}</p>
+
+    {% if post.category_set.all %}
+    <p>Categorias:
+      {% for cat in post.category_set.all %}
+        <a href="{% url 'posts:category_detail' cat.id %}">{{ cat.name }}</a>{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+    {% endif %}
   </article>
   {% endfor %}
 </section>
 {% else %}
 <p>Não foi encontrado nenhum post.</p>
-{% endif %} {% endblock content %}
+{% endif %}
+
+{% endblock content %}

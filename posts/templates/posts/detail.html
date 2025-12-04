@@ -15,6 +15,19 @@
   <ul>
     <li>Título: {{ post.titulo }}</li>
     <li>Data da publicação: {{ post.data_postagem|date}}</li>
+    <section>
+        <h4>Categorias deste post:</h4>
+            <ul>
+            {% for category in post.category_set.all %}
+                <li>
+                    <a href="{% url 'posts:category_detail' category.id %}"> {{ category.name }}</a>
+                </li>
+            {% empty %}
+            <li>Sem categorias.</li>
+            {% endfor %}
+            </ul>
+    </section>
+    <hr>
     <li><a href="{% url 'posts:update' post.id %}">Editar o post</a></li>
     <li><a href="{% url 'posts:delete' post.id %}">Apagar</a></li>
   </ul>

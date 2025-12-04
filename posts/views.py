@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from .temp_data import post_data
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from .models import Post, Comment
+from .models import Post, Comment, Category
 from .forms import PostForm, CommentForm
 from django.views import generic
 
@@ -12,6 +12,12 @@ from django.views import generic
 class PostListView(generic.ListView):
     model = Post
     template_name = 'posts/index.html'
+    context_object_name = 'posts'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = None
+        return context
 
 
 #Classe genérica com a view DETAIL para detalhamento de post
@@ -75,3 +81,25 @@ def create_comment(request, post_id):
         form = CommentForm()
     context = {'form': form, 'post': post}
     return render(request, 'posts/comment.html', context)
+
+
+class CategoryListView(generic.ListView):
+    model = Category
+    template_name = 'posts/categories.html'
+
+
+class CategoryCreateView(generic.CreateView):
+    model = Category
+    template_name = 'posts/create_category.html'
+    fields = ['name', 'text' , 'posts']
+    success_url = reverse_lazy('posts:categories')
+
+
+class CategoryDetailView(generic.DetailView):
+    model = Category
+    template_name = 'posts/index.html'
+    context_object_name = 'category'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['posts'] = self.object.posts.all()
+        return context

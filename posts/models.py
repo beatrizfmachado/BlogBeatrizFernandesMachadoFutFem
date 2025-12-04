@@ -20,3 +20,11 @@ class Comment(models.Model):
     data_comentario = models.DateTimeField()
     def __str__(self):
         return f'"{self.text}" - {self.autor.username}'
+    
+    
+class Category(models.Model):
+    name = models.CharField(max_length=255)
+    text = models.CharField(max_length=255)
+    posts = models.ManyToManyField(Post)
+    def __str__(self):
+        return f'{self.name}'

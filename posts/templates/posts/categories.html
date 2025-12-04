@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Categorias
+{% endblock title %}
+
+{% block content %}
+<h2>Listas de Categorias</h2>
+
+<!--
+<section>
+    {% for category in category_list %}
+    <hr>
+    <article>
+        <header>
+            <h3>{{category.name}} </h3>
+        </header>
+        <div class="lista-de-cards">
+            {% for post in category.posts.all %}
+            <div class="card">
+                <a href="{% url 'posts:detail' post.id %}">
+                    <img src="{{ post.imagem_url }}" alt="Imagem do post {{ post.titulo}}">
+                </a>
+                <p>{{ post.titulo }} ({{ post.data_postagem }})</p>
+            </div>
+            {% endfor %}
+        </div>
+    </article>
+    {% endfor %}
+-->
+
+<section>
+    <ul>
+        {% for category in category_list %}
+        <li>
+            <a href="{% url 'posts:category_detail' category.id %}">
+                {{ category.name }}
+            </a>
+        </li>
+        {% empty %}
+        <li>Não há categorias cadastradas.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'posts:create_category' %}"><button>Crie sua Categoria</button></a>
+</section>
+
+{% endblock content %}
