@@ -4,8 +4,9 @@ from django.conf import settings
 
 class Post(models.Model):
     titulo = models.CharField(max_length=255)
-    data_postagem = models.IntegerField()
-    imagem_url = models.URLField(max_length=200, null=True)
+    data_postagem = models.DateTimeField()
+    imagem_url = models.URLField(max_length=500, null=True)
+    conteudo = models.TextField()
 
     def __str__(self):
         return f'{self.titulo} ({self.data_postagem})'
