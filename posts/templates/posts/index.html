@@ -1,17 +1,24 @@
 {% extends 'base.html' %}
 
 {% block title %}
-
 {% if category %}
 Posts da categoria: {{ category.name }}
-
 {% else %}
 Todos os Posts
 {% endif %}
-
 {% endblock title %}
 
 {% block content %}
+
+{% if category %}
+  <h2>Posts da categoria: {{ category.name }}</h2>
+
+  {% if category.text %}
+    <p>{{ category.text }}</p>
+  {% endif %}
+{% else %}
+  <h2>Todos os Posts</h2>
+{% endif %}
 
 <section>
   {% if not category %}
