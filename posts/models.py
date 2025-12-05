@@ -7,7 +7,6 @@ class Post(models.Model):
     data_postagem = models.DateTimeField()
     imagem_url = models.URLField(max_length=500, null=True)
     conteudo = models.TextField()
-
     def __str__(self):
         return f'{self.titulo} ({self.data_postagem})'
 
